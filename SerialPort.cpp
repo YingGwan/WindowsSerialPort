@@ -264,8 +264,13 @@ int TSerialPort::WriteLine(char* pLine, bool addCRatEnd)
     int result = __WriteBuffer((unsigned char*)pLine, lineLength);
     if (pLine[lineLength-1]!=0x0D)
     {
-        char cr = 13;
-        result+=__WriteBuffer((unsigned char*)&cr, 1);
+        /* char cr = 13;
+        result += __WriteBuffer((unsigned char*)&cr, 1);*/
+
+        char end1 = 13;
+        char end2 = 10;
+        result += __WriteBuffer((unsigned char*)&end1, 1);
+        result += __WriteBuffer((unsigned char*)&end2, 1);
     }
     LeaveCriticalSection(&m_criticalSectionWrite);
     if (m_OnDataSentHandler)

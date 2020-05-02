@@ -10,7 +10,7 @@ This library is ready to use for any embedded developer (it requires no addition
 
 You can look into example projects for Visual Studio.
 
-## Previous edition
+## Improvements
 Previous class TSerialPort provided public function ReadLine() and WriteLine(), which however are not perfect to use. 
 
 -ReadLine()
@@ -65,6 +65,7 @@ in int result = __ReadBuffer((unsigned char*)pLine, maxBufferSize-1, timeOutMS);
                 timeOutCounter -= SERIALPORT_INTERNAL__TIMEOUT;
             }            
         }
+
 ....
 ```
 

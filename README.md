@@ -12,7 +12,9 @@ You can look into example projects for Visual Studio.
 
 ## Previous edition
 Previous class TSerialPort provided public function ReadLine() and WriteLine(), which however are not perfect to use. 
-'''Cpp
+
+-ReadLine()
+'''cpp
 int WriteLine(char* pLine, bool addCRatEnd=true);// Function declaration
 
     if (pLine[lineLength-1]!=0x0D)

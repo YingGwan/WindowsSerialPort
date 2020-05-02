@@ -160,7 +160,7 @@ int TSerialPort::__WriteBuffer(const unsigned char* pData, int dataLength)
 
 int TSerialPort::__ReadBuffer(unsigned char* pData, int dataLength, int timeOutMS)
 {
-    DWORD bytesRead,bytesReadTotal;
+   DWORD bytesRead,bytesReadTotal;
     int   timeOutCounter, bytesLeft;
 
 	if (m_portHandle==NULL)
@@ -177,24 +177,35 @@ int TSerialPort::__ReadBuffer(unsigned char* pData, int dataLength, int timeOutM
     timeOutCounter = timeOutMS;
     bytesLeft = dataLength;
 
-    if (timeOutMS<SERIALPORT_INTERNAL_TIMEOUT*2)
+    if (timeOutMS< SERIALPORT_INTERNAL__TIMEOUT *2)
     {
         Sleep(timeOutMS);
         ReadFile(m_portHandle, pData, dataLength, &bytesRead, NULL);
         bytesReadTotal += bytesRead;
-    } else {
+    } 
+    else 
+    {
         while(timeOutCounter>0)
         {            
             bytesRead = 0;
             ReadFile(m_portHandle, pData+bytesReadTotal, dataLength, &bytesRead, NULL);
+            printf("byteRead: %d\n", bytesRead);
             if (bytesRead)
             {
                 dataLength     -= bytesRead;
                 bytesReadTotal += bytesRead;
-                if (dataLength==0) break;
+                printf("%d\n", bytesReadTotal);
+                if (dataLength == 0)  break;
                 timeOutCounter = timeOutMS;
-            } else {
-                timeOutCounter -= SERIALPORT_INTERNAL_TIMEOUT;
+
+                //If last two char is ''\r\n'' ,then break.
+                //added:..
+                if ((pData[bytesReadTotal - 2] == '\r')&&(pData[bytesReadTotal - 1] == '\n'))
+                    break;
+            } 
+            else 
+            {
+                timeOutCounter -= SERIALPORT_INTERNAL__TIMEOUT;
             }            
         }
     }
@@ -206,6 +217,8 @@ int TSerialPort::__ReadBuffer(unsigned char* pData, int dataLength, int timeOutM
         }
     }
 	return bytesReadTotal;
+    
+         
 }
 
 int TSerialPort::ReadBuffer(unsigned char* pData, int dataLength, int timeOutMS)

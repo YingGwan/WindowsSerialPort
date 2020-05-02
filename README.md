@@ -16,11 +16,12 @@ Previous class TSerialPort provided public function ReadLine() and WriteLine(), 
 -ReadLine()
 
 ```cpp
+....
 int WriteLine(char* pLine, bool addCRatEnd=true);// Function declaration
 
     if (pLine[lineLength-1]!=0x0D)
     {
-      //Here, at the end of every command, we will add '\r'.
+      //Here, Previous code will add '\r' at the end of every command.
        /* char cr = 13;
         result += __WriteBuffer((unsigned char*)&cr, 1);*/
 
@@ -31,8 +32,39 @@ int WriteLine(char* pLine, bool addCRatEnd=true);// Function declaration
         result += __WriteBuffer((unsigned char*)&end2, 1);
         
     }
-
+....
 ```
 
+-ReadLine()
 
+```cpp
+int ReadLine(char* pLine, int maxBufferSize, int timeOutMS=-1);// Function declaration
+in int result = __ReadBuffer((unsigned char*)pLine, maxBufferSize-1, timeOutMS); 
+....
+    while(timeOutCounter>0)
+        {            
+            bytesRead = 0;
+            ReadFile(m_portHandle, pData+bytesReadTotal, dataLength, &bytesRead, NULL);
+            printf("byteRead: %d\n", bytesRead);
+            if (bytesRead)
+            {
+                dataLength     -= bytesRead;
+                bytesReadTotal += bytesRead;
+                printf("%d\n", bytesReadTotal);
+                if (dataLength == 0)  break;
+                timeOutCounter = timeOutMS;
+
+                //If last two char is ''\r\n'' ,then break.
+                // You can modify below part according to your format.
+                //added:..
+                if ((pData[bytesReadTotal - 2] == '\r')&&(pData[bytesReadTotal - 1] == '\n'))
+                    break;
+            } 
+            else 
+            {
+                timeOutCounter -= SERIALPORT_INTERNAL__TIMEOUT;
+            }            
+        }
+....
+```
 
